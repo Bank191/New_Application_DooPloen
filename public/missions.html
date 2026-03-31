@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missions - DooPloen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/home-style.css"> 
+    <link rel="stylesheet" href="/css/missions-style.css"> 
+    </head>
+<body>
+
+<div class="mission-container">
+    <header class="mission-header">
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+            <i class="fa-solid fa-chevron-left" onclick="location.href='home.html'" style="cursor: pointer; font-size: 1.2rem;"></i>
+            <h1 style="margin: 0;">ภารกิจตามหาเหรียญ</h1>
+        </div>
+        <p>สะสมเหรียญเพื่อแลกแพ็กเกจหรือของรางวัลพิเศษ</p>
+        
+        <div class="user-coin-card">
+            <i class="fa-solid fa-coins"></i>
+            <span id="user-coins">0</span> เหรียญ
+        </div>
+    </header>
+
+    <section class="daily-checkin card">
+        <div class="card-title">
+            <i class="fa-solid fa-calendar-check"></i> เช็คอินต่อเนื่อง 7 วัน
+            <span class="bonus-tag" style="color: #ff4081; font-weight: bold; margin-left: 10px;">+20 เหรียญ</span>
+        </div>
+        <div class="checkin-steps">
+            <div class="step completed">1<span>วันแรก</span></div>
+            <div class="step completed">2<span>วันที่ 2</span></div>
+            <div class="step active">3<span>วันนี้</span></div>
+            <div class="step">4<span>พรุ่งนี้</span></div>
+            <div class="step">5<span>วันถัดไป</span></div>
+            <div class="step">6<span>วันถัดไป</span></div>
+            <div class="step gift"><i class="fa-solid fa-gift"></i><span>วันสุดท้าย</span></div>
+        </div>
+        <button class="btn-checkin" id="btn-checkin" onclick="handleClaimCoin(5, 'daily_checkin')">
+            เช็คอินรับ 5 เหรียญ
+        </button>
+    </section>
+
+    <section class="mission-list">
+        <h3 style="display: flex; justify-content: space-between; align-items: center;">
+            ภารกิจประจำวัน <span style="font-size: 0.8rem; color: #888;">จำกัด 200 เหรียญ/วัน</span>
+        </h3>
+        
+       <div class="mission-item card" data-mission-id="4"> 
+            <div class="details">
+                <h4>ดูโฆษณา 10 คลิป</h4>
+                <p>รับ 50 เหรียญ <span class="progress-text">(0/10)</span></p>
+                <div class="progress-bar">
+                    <div class="fill" style="width: 0%;"></div> 
+                </div>
+            </div>
+            <button class="btn-action" onclick="startAd()">ทำเลย</button>
+        </div>
+
+        <div class="mission-item card" data-mission-id="6">
+            <div class="icon game"><i class="fa-solid fa-gamepad"></i></div>
+            <div class="details" style="flex: 1;">
+                <h4>มินิเกมประจำวัน</h4>
+                <p style="margin:0;">สูงสุด 15 เหรียญ <span class="progress-text">(0/3)</span></p>
+                <div class="progress-bar">
+                    <div class="fill" style="background: linear-gradient(90deg, #f093fb, #f5576c);"></div>
+                </div>
+            </div>
+            <button class="btn-action resume" id="btn-mission-6" onclick="doMission(6)">เล่นต่อ</button>
+        </div>
+    </section>
+
+    <div id="ad-modal" class="ad-modal" style="display: none;">
+        <div class="ad-content">
+            <span id="close-ad-btn" style="display:none; cursor:pointer; float:right;" onclick="closeAd()">&times;</span>
+            <h3 id="ad-status-text">กำลังโหลดโฆษณา...</h3>
+            <div id="ad-image-container" style="height:200px; background:#333; margin:15px 0; border-radius:10px;"></div>
+            <div class="progress-bar"><div id="ad-timer-bar" class="fill" style="width:0%"></div></div>
+        </div>
+    </div>
+
+    <section class="lucky-wheel card">
+        <div class="wheel-main-container">
+            <div class="wheel-header">
+                <h3 class="wheel-title">สุ่มวงล้อนำโชค</h3>
+                <p class="wheel-subtitle">ลุ้นรับรางวัลใหญ่สูงสุด 100 เหรียญ!</p>
+            </div>
+
+            <div class="wheel-area">
+            <div class="wheel-center-pointer"></div>
+            <div id="wheel" class="wheel-circle">
+                <div class="wheel-lines"></div>
+                <div class="wheel-number" style="--i:0;"><span>1</span></div>
+                <div class="wheel-number" style="--i:1;"><span>5</span></div>
+                <div class="wheel-number" style="--i:2;"><span>10</span></div>
+                <div class="wheel-number" style="--i:3;"><span>15</span></div>
+                <div class="wheel-number" style="--i:4;"><span>20</span></div>
+                <div class="wheel-number" style="--i:5;"><span>25</span></div>
+                <div class="wheel-number" style="--i:6;"><span>50</span></div>
+                <div class="wheel-number" style="--i:7;"><span>100</span></div>
+                
+                <div class="wheel-hub">
+                    <div class="wheel-hub-star">★</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wheel-action-box">
+            <div class="wheel-turn-info">
+                <span class="turn-label">สิทธิ์คงเหลือ</span>
+                <span class="turn-count" id="spin-count">1 ครั้ง / วัน</span>
+            </div>
+            <button class="btn-spin" id="btn-spin" onclick="spinWheel()">หมุนเลย</button>
+        </div>
+    </div>
+</section>
+
+<nav class="bottom-nav">
+    <a href="home.html"><i class="fa-solid fa-house"></i><span>หน้าแรก</span></a>
+    <a href="#"><i class="fa-solid fa-magnifying-glass"></i><span>ค้นหา</span></a>
+    <div class="nav-center active" onclick="location.reload()"> 
+        <div class="mission-icon"><i class="fa-solid fa-star"></i></div>
+        <span>ภารกิจ</span>
+    </div>
+    <a href="packages.html"><i class="fa-solid fa-box"></i><span>แพ็กเกจ</span></a>
+    <a href="#"><i class="fa-solid fa-user"></i><span>โปรไฟล์</span></a>
+</nav>
+
+<script src="/js/missions.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,432 @@
+/* 1. ตั้งค่าพื้นฐาน */
+        :root {
+            --primary-red: #E50914; /* สีแดงหลัก */
+            --dark-bg: #141414; /* สีดำหลัก */
+            --text-color: #ffffff;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            padding-top: 70px; /* เว้นที่ให้ Navbar */
+            padding-bottom: 90px;
+        }
+
+        /* 2. Navbar (ยุบรวมเหลือชุดเดียว) */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 4%;
+            background-color: var(--dark-bg);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        /* โลโก้หลัก (ลบตัวซ้ำออก) */
+        .logo {
+            color: var(--primary-red);
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex; /* เพื่อจัด span ให้อยู่ในแถว */
+        }
+
+        .logo span { color: white; margin-left: -2px; }
+
+        /* กลุ่มทางขวาที่รวมทั้งปุ่มและไอคอน */
+        .nav-right-container {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* ระยะห่างระหว่างบล็อกแดงกับกลุ่มไอคอน */
+        }
+
+        /* 🟥 บล็อกสีแดงที่คุณต้องการ (รวมร่างเหลือชุดเดียว) */
+        .auth-wrapper {
+            background-color: var(--primary-red);
+            /* 1. เพิ่ม Padding (บน-ล่าง 8px, ซ้าย-ขวา 25px) เพื่อให้บล็อกยาวขึ้น */
+            padding: 8px 25px; 
+            border-radius: 5px;
+            display: flex;
+            /* 2. เพิ่ม Gap เป็น 35px เพื่อให้ข้อความ "เข้าสู่ระบบ" กับ "สมัครสมาชิก" ไม่เบียดกัน */
+            gap: 35px; 
+            align-items: center;
+            /* 3. เพิ่มความกว้างขั้นต่ำ (ถ้าต้องการให้บล็อกดูยาวคงที่) */
+            min-width: fit-content; 
+        }
+
+        .auth-wrapper a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem; /* ปรับขนาดฟอนต์ให้ชัดขึ้นเล็กน้อย */
+            white-space: nowrap; /* กันไม่ให้ตัวหนังสือตกบรรทัด */
+        }
+        .auth-wrapper a:hover {
+            text-decoration: underline;
+        }
+
+        /* กลุ่มไอคอนทางขวา */
+        /* 🔔 แถวนี้ครับ */
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* ระยะห่างจะทำงานเมื่อมีไอคอนมากกว่า 1 อัน */
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* 3. Movie Grid */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .movie-card {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .movie-card img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* 4. Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 75px;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #333;
+            z-index: 2000;
+        }
+
+        .bottom-nav a {
+            color: #888;
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bottom-nav a.active {
+            color: var(--primary-red);
+        }
+
+        /* ปุ่ม Season */
+.btn-season {
+    background: transparent;
+    color: #888;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.btn-season.active {
+    color: #e50914; /* สีแดงแบบ Netflix */
+    border-bottom: 3px solid #e50914;
+}
+
+/* ปุ่มตอน (Episode) */
+.ep-item {
+    background: #222;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid #333;
+    transition: 0.3s;
+    text-align: left;
+}
+.ep-item:hover {
+    background: #333;
+    border-color: #e50914;
+}
+.ep-item i { margin-right: 10px; color: #e50914; }
+
+#season-buttons {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto; /* ให้เลื่อนซ้ายขวาได้ถ้าปุ่มเยอะ */
+    padding: 8px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+#season-buttons button {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    min-width: 84px;
+    height: 38px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+#season-buttons button:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+#season-buttons button.active {
+    background: #e50914;
+    color: #fff;
+    border-color: #ff5b5b;
+    box-shadow: 0 0 0 2px rgba(229,5,20,0.25);
+}
+/* ซ่อน Scrollbar เพื่อความสวยงาม */
+#season-buttons::-webkit-scrollbar {
+    display: none;
+}
+#season-buttons::-moz-scrollbar {
+    display: none;
+}
+
+#episode-list {
+    display: grid;
+    grid-template-columns: 1fr; /* แถวละ 1 ตอนสำหรับมือถือ */
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.content-selector {
+    width: 100%;
+    max-width: 1040px;
+    margin: 16px auto 20px;
+}
+
+#player-container {
+    width: 100%;
+    max-width: 1040px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#video-player-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0,0,0,0.9);
+    justify-content: flex-start;
+    align-items: center;
+    padding: 30px;
+    overflow-y: auto;
+    flex-direction: column;
+}
+
+#video-player-overlay.active {
+    display: flex;
+}
+
+#season-buttons {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+    width: min(100%, 1060px);
+    margin-bottom: 14px;
+    z-index: 1001;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(2px);
+}
+
+#season-buttons::-webkit-scrollbar,
+#season-buttons::-moz-scrollbar {
+    display: none;
+}
+
+#video-player-overlay .player-wrap {
+    position: relative;
+    width: min(100%, 1060px);
+    max-width: 1100px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.75);
+    overflow: hidden;
+}
+
+.content-selector {
+    width: min(100%, 1060px);
+    margin-top: 18px;
+}
+
+#episode-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+#episode-list .ep-item {
+    background: #1f1f1f;
+    border: 1px solid #3a3a3a;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#episode-list .ep-item.active {
+    border-color: #e50914;
+    background: rgba(229,5,20,0.16);
+}
+
+
+#video-player-overlay .player-wrap iframe,
+#video-player-overlay .player-wrap video {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+#video-player-overlay button.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1001;
+    background: rgba(255,255,255,0.75);
+    color: #111;
+    border: none;
+    border-radius: 999px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+}
+
+#video-player-overlay button.close-btn:hover {
+    background: rgba(255,255,255,0.95);
+}
+
+@media (min-width: 768px) {
+    #episode-list {
+        grid-template-columns: 1fr 1fr; /* แถวละ 2 ตอนสำหรับคอมพิวเตอร์ */
+    }
+}
+
+/* คอนเทนเนอร์หลักของแถวรับชมต่อ */
+#continue-watching-section {
+    margin: 40px 0;
+    padding: 0 4%;
+}
+
+#continue-watching-section h2 {
+    color: #e5e5e5;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+/* การ์ดหนังในแถวรับชมต่อ */
+#continue-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+#continue-container .movie-card {
+    min-width: 200px;
+    max-width: 200px;
+    transition: transform 0.3s ease;
+}
+
+#continue-container .movie-card:hover {
+    transform: scale(1.05);
+}
+
+/* แถบความคืบหน้า (Progress Bar) ใต้รูป */
+.progress-bar-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 0 0 8px 8px; /* โค้งมนเฉพาะด้านล่างให้รับกับรูป */
+    overflow: hidden;
+    margin-top: -4px; /* ให้แถบทับขอบล่างของรูปพอดี */
+    position: relative;
+    z-index: 5;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #e50914; /* สีแดง Netflix */
+    box-shadow: 0 0 5px rgba(229, 9, 20, 0.8);
+}
+
+/* เพิ่มใน home-style.css */
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000; /* พื้นหลังต้องดำสนิทถึงจะเห็น */
+    z-index: 10000; /* ต้องสูงกว่าทุกอย่าง */
+    display: none; /* เริ่มต้นให้ซ่อน */
+    color: white;
+}
+
+.search-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    gap: 15px;
+}
+
+.search-bar-wrap {
+    flex: 1;
+    background: #222;
+    padding: 10px 15px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar-wrap input {
+    background: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    margin-left: 10px;
+    width: 100%;
+}

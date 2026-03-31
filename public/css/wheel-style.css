@@ -1,0 +1,177 @@
+/* --- การตั้งค่าเริ่มต้น (Reset & Font) --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kanit', sans-serif;
+}
+
+body {
+    background: #141414;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- 1. คอนเทนเนอร์หลัก --- */
+.wheel-main-container {
+    background: #1c1f2b;
+    width: 380px;
+    height: 520px;
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid #333;
+}
+
+/* --- 2. ส่วนหัวข้อ --- */
+.wheel-header { text-align: center; }
+.wheel-title { color: #fff; font-size: 1.6rem; margin-bottom: 5px; }
+.wheel-subtitle { color: #aaa; font-size: 0.9rem; }
+
+/* --- 3. ส่วนวงล้อ (Wheel Area) --- */
+.wheel-area {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 20px 0;
+}
+
+.wheel-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    /* 🎨 สร้างช่องสี 8 ช่องแบบ Flat Pastel ตามรูปตัวอย่าง */
+    background: conic-gradient(
+        #9b59b6 0deg 45deg,   /* ม่วง */
+        #e74c3c 45deg 90deg,  /* แดง */
+        #f1c40f 90deg 135deg, /* เหลือง */
+        #2ecc71 135deg 180deg, /* เขียว */
+        #3498db 180deg 225deg, /* ฟ้า */
+        #e67e22 225deg 270deg, /* ส้ม */
+        #e91e63 270deg 315deg, /* ชมพู */
+        #1abc9c 315deg 360deg  /* มิ้นต์ */
+    );
+    transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+}
+
+/* จัดวางตัวเลขให้กระจายตัวออกไป */
+.wheel-number {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(calc(45deg * var(--i))); /* ใช้ค่า --i จาก HTML */
+}
+
+/* จุดกึ่งกลาง (Hub) */
+.wheel-hub {
+    width: 55px;
+    height: 55px;
+    background: #4a90e2; /* สีฟ้าสว่างตามรูปตัวอย่าง */
+    border: 4px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.wheel-hub-star { color: #fff; font-size: 1.8rem; }
+
+/* 🎯 ตัวชี้ด้านบน (Pointer) ปรับให้เหมือนรูปตัวอย่าง */
+.wheel-center-pointer {
+    width: 45px;
+    height: 45px;
+    background: #4a90e2;
+    border: 3px solid #fff;
+    position: absolute;
+    top: -15px; left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* จัดวางตัวเลขรางวัล */
+.wheel-number {
+    position: absolute;
+    width: 100%; height: 100%;
+    text-align: center;
+    transform: rotate(calc(45deg * var(--i)));
+}
+.wheel-number span {
+    display: inline-block;
+    position: relative;
+    top: 30px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff; /* ตัวเลขสีขาวอ่านง่ายกว่าบนสีพาสเทล */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* --- 4. ส่วนสิทธิ์การหมุน --- */
+.wheel-action-box {
+    background: rgba(255,255,255,0.05);
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #333;
+}
+.turn-label { color: #888; font-size: 0.8rem; }
+.turn-count { color: #fff; font-size: 1.1rem; }
+
+/* --- 5. ปุ่มหมุน --- */
+.btn-spin {
+    background: #4a90e2; /* ใช้สีเดียวกับเข็มชี้เพื่อให้ดูคุมโทน */
+    color: #fff;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-spin:hover { background: #357abd; transform: translateY(-2px); }
+.btn-spin:active { transform: translateY(0); }
+
+.btn-spin:disabled {
+    background: #cccccc;
+    color: #888;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* จัดวางตำแหน่งตัวเลขรางวัล */
+.wheel-number {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transform: rotate(calc(45deg * var(--i))); /* หมุนช่องละ 45 องศา */
+    z-index: 1;
+}
+
+.wheel-number span {
+    display: inline-block;
+    position: relative;
+    top: 25px; /* ระยะจากขอบวงล้อเข้าไปข้างใน */
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ffc107;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+}

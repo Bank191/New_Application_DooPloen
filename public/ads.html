@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/css/ads-style.css">
+</head>
+<body>
+
+    <div class="mission-card">
+        <h2>ภารกิจดูโฆษณา</h2>
+        <p>ความคืบหน้า: <span id="display-count">0</span> / 10</p>
+        <button onclick="startAd()">เริ่มดูโฆษณา</button>
+    </div>
+
+    <div id="ad-modal" class="ad-modal">
+        <div class="ad-content">
+            <span id="close-ad-btn" class="close-ad" onclick="closeAd()">&times;</span>
+            <h3 id="ad-status-text">กำลังเล่นโฆษณา...</h3>
+            <div id="ad-image-container" class="ad-image"></div>
+            <div class="progress-container">
+                <div id="ad-progress-bar" class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="ads.js"></script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+/* --- ส่วนของ Container หลัก --- */
+/* ปรับแต่ง Container หลักให้มีพื้นที่ */
+#privilege-container {
+    min-height: 300px;
+    padding: 20px 0;
+}
+
+/* ทำให้ข้อความ "ของรางวัลสำหรับระดับนี้" ดูเป็นหมวดหมู่ */
+h2 {
+    color: #fff;
+    margin-left: 20px;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    width: fit-content;
+}
+
+/* จัดการ Skeleton Loading ให้ดูเนียนระหว่างรอ API */
+.loading-shimmer {
+    color: #888;
+    text-align: center;
+    padding: 50px;
+    font-style: italic;
+    letter-spacing: 1px;
+}
+
+/* จัดระเบียบแถว (Row) */
+.privilege-row {
+    margin-bottom: 40px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.row-title {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 0 0 15px 20px;
+    padding-left: 12px;
+    border-left: 5px solid #E50914; /* แดงเอกลักษณ์ DooPloen */
+    letter-spacing: 0.5px;
+}
+
+/* ส่วนของตัวเลื่อน (Horizontal Scroller) */
+.row-items-scroller {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 10px 20px 20px 20px; /* เพิ่ม Padding ล่างกันเงาโดนตัด */
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* ซ่อนสำหรับ Firefox */
+    -webkit-overflow-scrolling: touch;
+}
+
+.row-items-scroller::-webkit-scrollbar {
+    display: none; /* ซ่อนสำหรับ Chrome/Safari */
+}
+
+/* ดีไซน์การ์ดแบบใหม่ (v2) - ปรับปรุง UX */
+.priv-card-v2 {
+    min-width: 220px;
+    max-width: 220px;
+    background: #181818; /* สีเข้มแบบ Netflix */
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0; /* ป้องกันการ์ดโดนบีบ */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border: 1px solid #2a2a2a;
+}
+
+.priv-card-v2:hover {
+    transform: scale(1.06);
+    z-index: 10;
+    border-color: #E50914;
+    box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+}
+
+.card-img-container {
+    position: relative;
+    height: 125px;
+    background: #333;
+}
+
+.card-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ป้ายสถานะ */
+.limit-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #FFD700; /* สีทอง */
+    color: #000;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 800;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* เนื้อหาภายในการ์ด */
+.card-body {
+    padding: 15px;
+    text-align: left;
+}
+
+.card-body h4 {
+    font-size: 1rem;
+    margin: 0 0 8px 0;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.coin-price {
+    color: #FFD700;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin: 5px 0;
+}
+
+.partner-name {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 12px;
+}
+
+/* ปุ่มแลกสิทธิแบบ Modern */
+.btn-redeem-v2 {
+    width: 100%;
+    padding: 10px;
+    background: #E50914;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-redeem-v2:hover {
+    background: #ff0f1b;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.partner-name-label {
+    font-size: 0.85rem;
+    color: #888; /* สีเทาจางๆ */
+    margin: 4px 0;
+    font-weight: 500;
+}
+
+.coin-price {
+    color: #FFD700;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 8px 0;
+}
+
+/* คอนเทนเนอร์หลอด */
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    margin: 12px 0;
+    overflow: hidden;
+}
+
+/* ตัวหลอดสีแดง */
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #E50914, #ff4d4d);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+/* ตกแต่งป้ายสิทธิ์มุมรูป */
+.limit-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(229, 9, 20, 0.9);
+    color: white;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* ปุ่มที่กดไม่ได้ */
+.btn-redeem-v2.disabled {
+    background: #444 !important;
+    cursor: not-allowed;
+    border-color: #555;
+}
+
+/* แถวที่ 100+: ส่วนแสดงความก้าวหน้าการเลื่อนระดับ (Level Progress) */
+.level-up-progress {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+    border: 1px solid #333;
+}
+
+/* แถวที่ 108+: จัดระเบียบข้อความหัวเรื่องให้ชิดซ้าย-ขวา */
+.level-info {
+    display: flex;
+    justify-content: space-between;
+    color: #ccc;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* แถวที่ 116+: พื้นหลังของหลอด (สีเทาเข้ม) */
+.progress-container-main {
+    width: 100%;
+    height: 12px;
+    background: #333;
+    border-radius: 10px;
+    overflow: hidden; 
+}
+
+/* แถวที่ 124+: ตัวหลอดสีแดง (จะขยายตาม JavaScript) */
+.progress-fill-main {
+    height: 100%;
+    background: linear-gradient(90deg, #E50914, #ff4d4d); 
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+    width: 0%; /* เริ่มต้นที่ 0 */
+    transition: width 1.5s cubic-bezier(0.1, 0.5, 0.1, 1); 
+}
+
+/* แถวที่ 133+: ข้อความบอกจำนวนเงินที่ยังขาดอยู่ */
+.progress-text {
+    text-align: center;
+    margin-top: 10px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.profile-card {
+    position: relative; /* สำคัญมาก เพื่อให้ปุ่มอ้างอิงตำแหน่งได้ถูก */
+    /* ... style อื่นๆ ของคุณ ... */
+}
+
+.back-home-btn {
+    backdrop-filter: blur(5px); /* ทำให้พื้นหลังปุ่มเบลอๆ ดูแพง */
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.privilege-card.locked {
+    filter: grayscale(100%); /* ทำเป็นสีเทา */
+    opacity: 0.5;            /* จางลง */
+    pointer-events: none;    /* กดไม่ได้ */
+    position: relative;
+}
+.lock-icon-overlay {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+}
+
+/* เอฟเฟกต์สำหรับ Card ที่ถูกล็อก */
+.priv-card-v2.locked {
+    filter: grayscale(100%);
+    opacity: 0.6;
+    position: relative;
+    pointer-events: none; /* ห้ามกดสิทธิ์ที่ยังไม่ถึงระดับ */
+}
+
+/* ไอคอนล็อกใหญ่กลางภาพ */
+.lock-overlay {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+    z-index: 10;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+/* ข้อความเมื่อแลกครบแล้ว */
+.used-badge {
+    position: absolute;
+    top: 50%; /* ให้อยู่กึ่งกลางภาพพอดี */
+    left: 0; 
+    width: 100%;
+    background: rgba(0, 0, 0, 0.85); /* เพิ่มความเข้มพื้นหลังเพื่อให้ตัวอักษรสีเขียวเด่น */
+    color: #00ff00; 
+    padding: 12px 0;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+    z-index: 20; /* ให้ลอยเหนือทุกอย่างใน Card */
+    transform: translateY(-50%); /* จัดตำแหน่งให้กลางเป๊ะ */
+    border-top: 1px solid #00ff00; /* เพิ่มเส้นขอบบน-ล่างให้ดูเหมือน Badge จริง */
+    border-bottom: 1px solid #00ff00;
+}
+
+/* เมื่อ Card ถูกล็อก ให้รูปข้างในเป็นสีเทา */
+.priv-card-v2.locked img {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+/* ปรับปุ่มให้ดูเหมือนกดไม่ได้จริงๆ */
+.btn-redeem-v2.disabled {
+    background: #333 !important;
+    color: #666 !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: not-allowed;
+}

@@ -1,0 +1,182 @@
+:root {
+    --bg-color: #0c0c14;
+    --card-bg: #1a1a2e;
+    --primary-color: #e91e63;
+    --gold-color: #ffd700;
+    --text-main: #ffffff;
+}
+
+body { background-color: var(--bg-color); font-family: 'Kanit', sans-serif; color: var(--text-main); }
+
+.card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* เช็คอินรายวัน */
+.checkin-steps {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+.step {
+    width: 40px; height: 40px;
+    background: #333; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; font-size: 14px;
+}
+.step.completed { background: var(--primary-color); }
+.step.active { border: 2px solid var(--primary-color); }
+.step span { position: absolute; bottom: -20px; font-size: 10px; width: 50px; text-align: center; color: #888; }
+
+/* รายการภารกิจ */
+.mission-item {
+    display: flex; align-items: center; gap: 15px; margin-bottom: 10px;
+}
+.mission-item .icon {
+    width: 50px; height: 50px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+}
+.icon.ads { background: rgba(0, 123, 255, 0.2); color: #007bff; }
+.icon.game { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+
+.progress-bar {
+    width: 100%; height: 6px; background: #333; border-radius: 10px; margin-top: 5px;
+}
+.progress-bar .fill {
+    height: 100%; background: var(--primary-color); border-radius: 10px;
+}
+
+.btn-action {
+    background: #f0f0f0; color: #333; border: none;
+    padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold;
+}
+.btn-action.resume { background: var(--primary-color); color: white; }
+
+.btn-checkin, .btn-action {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* เอฟเฟกต์ตอนเอาเมาส์วาง */
+.btn-checkin:hover, .btn-action:hover {
+    transform: scale(1.05); /* ปุ่มขยายขึ้นนิดนึง */
+    filter: brightness(1.2); /* ปุ่มสว่างขึ้น */
+    box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+}
+
+/* เอฟเฟกต์ตอนกดปุ่ม */
+.btn-checkin:active, .btn-action:active {
+    transform: scale(0.95); /* ปุ่มยุบลง */
+}
+
+/* --- ส่วนวงล้อ (Lucky Wheel) --- */
+.wheel-area {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 20px auto;
+}
+
+.wheel-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    border: 5px solid #ffffff;
+    overflow: hidden;
+    /* 🎨 สร้าง 8 ช่องสีพาสเทล */
+    background: conic-gradient(
+        #9b59b6 0deg 45deg,   
+        #e74c3c 45deg 90deg,  
+        #f1c40f 90deg 135deg, 
+        #2ecc71 135deg 180deg, 
+        #3498db 180deg 225deg, 
+        #e67e22 225deg 270deg, 
+        #e91e63 270deg 315deg, 
+        #1abc9c 315deg 360deg  
+    );
+    transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* จัดวางตัวเลขให้กระจายตัวออกไปตามช่อง */
+/* จัดวางตัวเลขให้กระจายตัวออกไปตามช่อง */
+.wheel-number {
+    position: absolute;
+    width: 100%; height: 100%;
+    text-align: center;
+    /* 🎯 สูตรคำนวณองศา: หมุนช่องละ 45 องศาตามค่า --i */
+    transform: rotate(calc(45deg * var(--i)));
+}
+
+.wheel-number span {
+    display: inline-block;
+    position: relative;
+    top: 30px; /* ระยะจากขอบเข้าไปข้างใน */
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* เข็มชี้รางวัลด้านบน */
+.wheel-center-pointer {
+    width: 45px; height: 45px;
+    background: #4a90e2;
+    border: 3px solid #fff;
+    position: absolute;
+    top: -15px; left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    z-index: 10;
+}
+
+/* แกนกลางวงล้อ */
+.wheel-hub {
+    width: 55px; height: 55px;
+    background: #4a90e2;
+    border: 4px solid #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    display: flex; justify-content: center; align-items: center;
+}
+.wheel-hub-star { color: #fff; font-size: 1.8rem; }
+
+/* หลอดในหน้าภารกิจ */
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #222; /* พื้นหลังหลอดสีเข้มเพื่อให้เห็นสีฟ้าชัด */
+    border-radius: 10px;
+    margin-top: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fill {
+    height: 100%;
+    width: 0%; /* เริ่มต้นที่ 0 จีเอสจะเป็นคนสั่งขยับ */
+    background: linear-gradient(90deg, #00c6ff, #0072ff); /* สีฟ้าสดใส */
+    transition: width 0.5s ease-in-out;
+    border-radius: 10px;
+}
+
+/* หน้าต่างโฆษณา (Modal) */
+.ad-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); z-index: 9999;
+    display: flex; justify-content: center; align-items: center;
+}
+.ad-content {
+    background: #1a1a2e; padding: 25px; border-radius: 20px; text-align: center; width: 85%; max-width: 400px;
+    border: 1px solid #333;
+}

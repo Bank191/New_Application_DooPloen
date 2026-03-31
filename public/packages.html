@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DooPloen - เลือกแพ็กเกจของคุณ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/package-style.css">
+    <style>
+        /* CSS เพิ่มเติมสำหรับ Tab */
+        .payment-tabs {
+            display: flex;
+            justify-content: center;
+            margin: 20px auto 40px;
+            background: #1a1a2e;
+            padding: 5px;
+            border-radius: 50px;
+            width: fit-content;
+            border: 1px solid #333;
+        }
+        .tab-btn {
+            padding: 12px 25px;
+            border: none;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: 0.3s;
+            font-family: 'Kanit', sans-serif;
+        }
+        .tab-btn.active {
+            background: #e91e63;
+            color: white;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo" onclick="location.href='home.html'">Doo<span>Ploen</span></div>
+    <div class="nav-right-container">
+        <a href="home.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก</a>
+    </div>
+</header>
+
+<div class="package-container">
+    <h1 class="package-title">เลือกแพ็กเกจที่ใช่สำหรับคุณ</h1>
+    <p class="package-subtitle">รับเหรียญโบนัสฟรีทันที 7% จากยอดชำระเมื่อสมัครสมาชิก</p>
+
+    <div class="payment-tabs">
+        <button id="tab-cash" class="tab-btn active" onclick="switchPaymentMode('CASH')">
+            <i class="fa-solid fa-money-bill-wave"></i> ชำระด้วยเงิน
+        </button>
+        <button id="tab-coin" class="tab-btn" onclick="switchPaymentMode('COIN')">
+            <i class="fa-solid fa-coins"></i> ชำระด้วยเหรียญ
+        </button>
+    </div>
+
+    <div class="package-grid">
+        <div class="package-card tier-silver">
+            <div class="card-header">
+                <span class="badge-type">7 วัน</span>
+                <h2>Beginner</h2>
+                <p class="price"><span id="p-val-1">69</span><span id="p-unit-1">฿</span></p>
+            </div>
+            <ul class="features">
+                <li><i class="fa-solid fa-circle-check"></i> ความคมชัด 480p</li>
+                <li class="bonus"><i class="fa-solid fa-coins"></i> แถมฟรี 5 เหรียญ</li>
+            </ul>
+            <button class="select-btn pkg-btn" id="btn-1" 
+                data-cash="69" data-coin="700" data-name="Beginner" data-bonus="5"
+                onclick="handlePurchase(1)">เลือกแพ็กเกจนี้</button>
+        </div>
+
+        <div class="package-card tier-silver">
+            <div class="card-header">
+                <span class="badge-type">1 เดือน</span>
+                <h2>Mobile</h2>
+                <p class="price"><span id="p-val-2">99</span><span id="p-unit-2">฿</span></p>
+            </div>
+            <ul class="features">
+                <li><i class="fa-solid fa-circle-check"></i> ความคมชัด 480p</li>
+                <li class="bonus"><i class="fa-solid fa-coins"></i> แถมฟรี 7 เหรียญ</li>
+            </ul>
+            <button class="select-btn pkg-btn" id="btn-2" 
+                data-cash="99" data-coin="1000" data-name="Mobile" data-bonus="7"
+                onclick="handlePurchase(2)">เลือกแพ็กเกจนี้</button>
+        </div>
+
+        <div class="package-card tier-gold featured">
+            <div class="recommend-badge">ยอดนิยม</div>
+            <div class="card-header">
+                <span class="badge-type">1 เดือน</span>
+                <h2>Standard</h2>
+                <p class="price"><span id="p-val-3">349</span><span id="p-unit-3">฿</span></p>
+            </div>
+            <ul class="features">
+                <li><i class="fa-solid fa-circle-check"></i> ความคมชัด 1080p</li>
+                <li class="bonus"><i class="fa-solid fa-coins"></i> แถมฟรี 24 เหรียญ</li>
+            </ul>
+            <button class="select-btn gold pkg-btn" id="btn-3" 
+                data-cash="349" data-coin="3500" data-name="Standard" data-bonus="24"
+                onclick="handlePurchase(3)">เลือกแพ็กเกจนี้</button>
+        </div>
+
+        <div class="package-card tier-platinum">
+            <div class="card-header">
+                <span class="badge-type">1 เดือน</span>
+                <h2>Premium</h2>
+                <p class="price"><span id="p-val-4">419</span><span id="p-unit-4">฿</span></p>
+            </div>
+            <ul class="features">
+                <li><i class="fa-solid fa-crown"></i> ความคมชัด 4K Ultra HD</li>
+                <li class="bonus"><i class="fa-solid fa-coins"></i> แถมฟรี 29 เหรียญ</li>
+            </ul>
+            <button class="select-btn gold pkg-btn" id="btn-4" 
+                data-cash="419" data-coin="4200" data-name="Premium" data-bonus="29"
+                onclick="handlePurchase(4)">เลือกแพ็กเกจนี้</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentMode = 'CASH';
+
+function switchPaymentMode(mode) {
+    currentMode = mode;
+    document.getElementById('tab-cash').classList.toggle('active', mode === 'CASH');
+    document.getElementById('tab-coin').classList.toggle('active', mode === 'COIN');
+
+    const buttons = document.querySelectorAll('.pkg-btn');
+    buttons.forEach((btn, index) => {
+        const id = index + 1;
+        const cash = btn.getAttribute('data-cash');
+        const coin = btn.getAttribute('data-coin');
+        
+        const valSpan = document.getElementById(`p-val-${id}`);
+        const unitSpan = document.getElementById(`p-unit-${id}`);
+
+        if (mode === 'COIN') {
+            valSpan.innerText = coin;
+            unitSpan.innerText = ' 🪙';
+            btn.innerText = `ใช้ ${coin} เหรียญแลก`;
+            btn.style.background = "#FFD700"; btn.style.color = "#000";
+        } else {
+            valSpan.innerText = cash;
+            unitSpan.innerText = '฿';
+            btn.innerText = "เลือกแพ็กเกจนี้";
+            btn.style.background = ""; btn.style.color = "";
+        }
+    });
+}
+
+async function handlePurchase(packageId) {
+    // 1. เช็ค Login (เหมือนเดิม)
+    const userJson = localStorage.getItem("user");
+    if (!userJson) {
+        alert("กรุณาเข้าสู่ระบบก่อนสมัครสมาชิก");
+        window.location.href = "login.html";
+        return;
+    }
+
+    // 2. ดึงข้อมูลจากปุ่มที่กด
+    const btn = document.getElementById(`btn-${packageId}`);
+    const name = btn.dataset.name;
+    const amount = currentMode === 'CASH' ? btn.dataset.cash : btn.dataset.coin;
+    const bonus = btn.dataset.bonus || 0;
+
+    // 3. แยกเงื่อนไขการชำระเงิน
+    if (currentMode === 'CASH') {
+        // ถ้าจ่ายเงินสด -> ส่งค่าทั้งหมดไปที่หน้า payment.html ผ่าน URL
+        window.location.href = `payment.html?packageId=${packageId}&name=${encodeURIComponent(name)}&amount=${amount}&bonus=${bonus}`;
+    } else {
+        // ถ้าจ่ายด้วยเหรียญ (ถ้าต้องการให้ตัดยอดทันที สามารถใช้ Code fetch เดิมใส่ตรงนี้ได้เลย)
+        alert("โหมดจ่ายด้วยเหรียญยังไม่เปิดใช้งานหน้ายืนยัน");
+    }
+}
+
+</script>
+</body>
+</html>

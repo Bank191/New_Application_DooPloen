@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สุ่มวงล้อนำโชค - UI</title>
+    <link rel="stylesheet" href="/css/missions-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="wheel-main-container">
+        <div class="user-coin-display">
+            💰 ยอดเหรียญของคุณ: <span id="user-coins">-</span> เหรียญ
+        </div>
+
+        <div class="wheel-header">
+            <h1 class="wheel-title">สุ่มวงล้อนำโชค</h1>
+            <p class="wheel-subtitle">ลุ้นรับรางวัลใหญ่สูงสุด 100 เหรียญ!</p>
+        </div>
+<div class="wheel-area">
+    <div class="wheel-center-pointer"></div> <div id="wheel" class="wheel-circle">
+    <div class="wheel-lines"></div>
+
+    <div class="wheel-number" style="--i:0;"><span>1</span></div>
+    <div class="wheel-number" style="--i:1;"><span>5</span></div>
+    <div class="wheel-number" style="--i:2;"><span>10</span></div>
+    <div class="wheel-number" style="--i:3;"><span>15</span></div>
+    <div class="wheel-number" style="--i:4;"><span>20</span></div>
+    <div class="wheel-number" style="--i:5;"><span>25</span></div>
+    <div class="wheel-number" style="--i:6;"><span>50</span></div>
+    <div class="wheel-number" style="--i:7;"><span>100</span></div>
+
+    <div class="wheel-hub">
+        <div class="wheel-hub-star">★</div>
+    </div>
+</div>
+</div>
+
+        <div class="wheel-action-box">
+            <div class="wheel-turn-info">
+                <span class="turn-label">สิทธิ์คงเหลือ</span>
+                <span class="turn-count" id="spin-count">1 ครั้ง / วัน</span>
+            </div>
+            <button id="btn-spin" class="btn-spin" onclick="spinWheel()">หมุนเลย</button>
+        </div>
+    </div>
+
+    <script src="/js/missions.js"></script>
+</body>
+</html>

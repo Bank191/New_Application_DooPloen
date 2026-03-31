@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DooPloen - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/home-style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="user-status-bar">
+    <div class="coin-display" onclick="location.href='missions.html'" style="cursor: pointer;">
+        <i class="fa-solid fa-coins" style="color: #ffd700;"></i>
+        <span id="home-user-coins">0</span> </div>
+    <div class="user-level-tag">
+        <span id="home-user-level">เหรียญ</span>
+    </div>
+</div>
+
+    <div class="logo">Doo<span>Ploen</span></div>
+    
+    <div class="nav-right-container">
+        <div class="auth-wrapper" id="auth-section">
+            <a href="login.html">เข้าสู่ระบบ</a>
+            <a href="register.html">สมัครสมาชิก</a>
+        </div>
+
+        <div class="nav-icons">
+    <i class="fa-solid fa-crown" 
+       onclick="location.href='privileges.html'" 
+       style="color: #ffd700; cursor: pointer; margin-right: 15px;" 
+       title="สิทธิพิเศษและระดับสมาชิก">
+    </i>
+    
+    <i class="fa-solid fa-bell"></i>
+</div>
+    </div>
+</header>
+
+<section class="main-banner">
+    <div class="banner-content">
+        <span class="badge">FREE TRIAL: FIRST 2 EPS</span>
+        <h1>ตำนานจอมยุทธ์ภูตถังซาน</h1>
+        <p>อนิเมะจีนสุดฮิต พากย์ไทย และซับไทย ดูฟรี 2 ตอนแรก!</p>
+        <div class="banner-buttons">
+            <button class="btn-play"><i class="fa-solid fa-play"></i> ดูเลย</button>
+            <button class="btn-list"><i class="fa-solid fa-plus"></i> รายการของฉัน</button>
+        </div>
+    </div>
+</section>
+
+<div class="categories">
+    <button class="cat-item active">ทั้งหมด</button>
+    <button class="cat-item">ภาพยนตร์</button>
+    <button class="cat-item">ซีรีส์</button>
+    <button class="cat-item">อนิเมะ</button>
+</div>
+
+<section id="continue-watching-section" style="margin-top: 20px;">
+    <div class="section-header">
+        <h2><i class="fa-solid fa-clock-rotate-left"></i> รับชมต่อ</h2>
+    </div>
+    <div id="continue-container" style="display: flex; gap: 15px; overflow-x: auto; padding: 10px 20px; scrollbar-width: none;">
+        </div>
+</section>
+
+<section class="movie-section">
+    <div class="section-header">
+        <h2><i class="fa-solid fa-arrow-trend-up"></i> ยอดนิยมตอนนี้</h2>
+        <a href="#">ดูทั้งหมด</a>
+    </div>
+    
+    <div class="movie-grid" id="movie-container">
+        <p style="color: white;">กำลังโหลดหนัง...</p>
+    </div>
+</section>
+
+<nav class="bottom-nav">
+    <a href="#" class="active"><i class="fa-solid fa-house"></i><span>หน้าแรก</span></a>
+    <a href="javascript:void(0)" onclick="toggleSearch()">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span>ค้นหา</span>
+</a>
+    <div class="nav-center" onclick="location.href='missions.html'" style="cursor: pointer;">
+    <div class="mission-icon"><i class="fa-solid fa-star"></i></div>
+    <span>ภารกิจ</span>
+    </div>
+    <a href="packages.html"><i class="fa-solid fa-box"></i><span>แพ็กเกจ</span></a>
+    <a href="select-profile.html">
+        <i class="fa-solid fa-circle-user"></i>
+        <span id="nav-profile-name">โปรไฟล์</span>
+    </a>
+</nav>
+
+<div id="video-player-overlay">
+    <button class="close-btn" onclick="closePlayer()"><i class="fa-solid fa-xmark"></i></button>
+    <h2 id="playing-title"></h2>
+    <div id="season-buttons"></div>
+    <div class="player-wrap" id="player-container"></div>
+
+    <div class="content-selector">
+        <div id="episode-list"></div>
+    </div>
+</div>
+
+<div id="search-overlay" class="search-overlay">
+    <div class="search-header">
+        <button class="close-search" onclick="toggleSearch()"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="search-bar-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-input" placeholder="ค้นหาชื่อหนัง, ซีรีส์, หรืออนิเมะ..." oninput="doSearch()">
+        </div>
+    </div>
+    
+    <div class="search-content">
+        <div id="search-results-info" style="color: #888; margin-bottom: 15px; padding: 0 20px;"></div>
+        <div id="search-results" class="movie-grid">
+            </div>
+    </div>
+</div>
+<script>
+
+    // ในหน้า home.html (ส่วนของ <script>)
+function updateWatchHistory(contentId, episodeId, progress = 0) {
+    // 1. ดึงข้อมูล User (ก้อนหลัก)
+    const userStorage = localStorage.getItem('user'); 
+    if (!userStorage) {
+        console.warn("⚠️ ไม่พบข้อมูลผู้ใช้หลักใน localStorage");
+        return;
+    }
+    const userData = JSON.parse(userStorage);
+    const userId = userData.user_id; 
+
+    // 📍 2. ดึงข้อมูล "โปรไฟล์ที่เลือก" (จากหน้า select-profile.html)
+    const profileId = localStorage.getItem('current_profile_id'); // <--- ชื่อ KEY ต้องตรงกับที่มึงเซ็ตไว้ใน select-profile
+
+    console.log(`DEBUG: บันทึกประวัติ - User: ${userId}, Profile: ${profileId || 'NULL'}`);
+
+    fetch('/api/watch-history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            user_id: userId,
+            profile_id: profileId || null, // ส่ง NULL ไปถ้ายังไม่ได้เลือกโปรไฟล์
+            content_id: contentId,
+            episode_id: episodeId,
+            progress_percent: progress
+        })
+    })
+    .then(res => res.json())
+    .then(data => console.log("✅ History saved:", data))
+    .catch(err => console.error("❌ Error saving history:", err));
+}
+
+    // 1. ฟังก์ชันโหลดรายการหนังจาก API
+async function showMovies() {
+    const movieContainer = document.getElementById('movie-container');
+    if (!movieContainer) return;
+
+    try {
+        const response = await fetch('/api/movies');
+        const data = await response.json();
+
+        // รองรับทั้ง 2 รูปแบบ response: {success:true, movies:[...]} หรือ [...]
+        let movies = [];
+        if (Array.isArray(data)) {
+            movies = data;
+        } else if (data && Array.isArray(data.movies)) {
+            movies = data.movies;
+        } else {
+            movieContainer.innerHTML = '<p style="color: white; width: 100%; text-align: center;">รูปแบบข้อมูลจาก Server ไม่ถูกต้อง</p>';
+            return;
+        }
+
+        if (movies.length === 0) {
+            movieContainer.innerHTML = '<p style="color: white; width: 100%; text-align: center;">ไม่พบข้อมูลหนังในฐานข้อมูล</p>';
+            return;
+        }
+
+        movieContainer.innerHTML = movies.map(movie => {
+            const poster = movie.poster_path || 'https://via.placeholder.com/150x220?text=No+Image';
+            const badge = movie.is_premium == 1 ? 'VIP' : 'FREE';
+            const trailer = movie.trailer_key || '';
+            
+            // จัดการชื่อเรื่องให้ปลอดภัย (ลบ ' ออกเพื่อไม่ให้ JavaScript Error)
+            const safeTitle = movie.title ? movie.title.replace(/'/g, "\\'") : "หนังใหม่";
+
+            return `
+                <div class="movie-card" 
+                     onclick="watchMovie(${movie.content_id}, '${safeTitle}')"
+                     style="position: relative; cursor: pointer;">
+                    
+                    <div class="top-badge" style="background: ${movie.is_premium == 1 ? '#ffc107' : '#E50914'}; color: black; font-weight: bold; padding: 2px 8px; border-radius: 4px; position: absolute; top: 10px; left: 10px; z-index: 2;">
+                        ${badge}
+                    </div>
+                    
+                    <img src="${poster}" alt="${movie.title}" 
+                         onerror="this.src='https://via.placeholder.com/150x220?text=Error+Loading'" 
+                         style="width: 100%; border-radius: 8px;">
+                    
+                    <p style="color: white; margin-top: 10px; font-size: 14px; text-align: center;">${movie.title}</p>
+                </div>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error("Fetch Error:", error);
+        movieContainer.innerHTML = '<p style="color: #ff4d4d; padding: 20px; width: 100%; text-align: center;">เชื่อมต่อ Server ล้มเหลว</p>';
+    }
+}
+
+    // 1. แยกฟังก์ชันหลักออกมาไว้ข้างนอก (Top Level) ห้ามซ้อนกัน
+function extractYTKey(urlOrKey) {
+    if (!urlOrKey) return '';
+    const str = urlOrKey.trim();
+
+    // ถ้าเป็น URL ของ YouTube
+    try {
+        const url = new URL(str);
+        if (url.hostname.includes('youtu.be')) {
+            return url.pathname.slice(1);
+        }
+        if (url.hostname.includes('youtube.com')) {
+            // /watch?v=xxx
+            const v = url.searchParams.get('v');
+            if (v) return v;
+            // /embed/xxx
+            const pathParts = url.pathname.split('/').filter(Boolean);
+            const embedIndex = pathParts.indexOf('embed');
+            if (embedIndex !== -1 && pathParts.length > embedIndex + 1) {
+                return pathParts[embedIndex + 1];
+            }
+            // กรณี /v/xxx หรือ /shorts/xxx
+            if (pathParts.length > 1) {
+                const candidate = pathParts[pathParts.length - 1];
+                if (candidate.length >= 11 && candidate.length <= 20) {
+                    return candidate;
+                }
+            }
+            return '';
+        }
+    } catch (ignore) {
+        // ไม่ใช่ URL ก็ผ่านไปถือเป็น key ตรง
+    }
+
+    // ถ้าเป็น key ตรงๆ
+    return str;
+}
+
+function playTrailer(key, title, contentId, episodeId) {
+    // 🚩 1. เพิ่มบรรทัดนี้: สั่งปิดหน้าต่างค้นหาทันทีที่กดเล่น
+    const searchOverlay = document.getElementById('search-overlay');
+    if (searchOverlay) {
+        searchOverlay.style.display = 'none'; 
+    }
+
+    const overlay = document.getElementById('video-player-overlay');
+    const container = document.getElementById('player-container');
+    const titleDisplay = document.getElementById('playing-title');
+
+    if (!overlay || !container) return; 
+
+    // 🚩 2. มั่นใจว่า Overlay วิดีโอจะแสดงผล (บางที class active อย่างเดียวอาจไม่พอ)
+    overlay.style.display = 'flex'; 
+    overlay.classList.add('active');
+    
+    titleDisplay.innerText = "กำลังรับชม: " + (title || "ตอนใหม่");
+
+    const ytKey = extractYTKey(key);
+    if (ytKey) {
+        container.innerHTML = `
+            <iframe width="100%" height="100%" 
+                src="https://www.youtube.com/embed/${ytKey}?autoplay=1" 
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+            </iframe>`;
+        
+        if (contentId) {
+            updateWatchHistory(contentId, episodeId, 0); 
+        }
+    } else {
+        container.innerHTML = '<p style="color: #e50914;">❌ ขออภัย ไม่พบไฟล์วิดีโอสำหรับตอนนี้</p>';
+    }
+}
+
+function closePlayer() {
+    // 💾 บันทึกประวัติเมื่อปิด player (สมมติว่าดูจบแล้ว)
+    if (window.currentContentId && window.currentEpisodeId) {
+        updateWatchHistory(window.currentContentId, window.currentEpisodeId, 100); // บันทึกเป็นดูจบ
+        console.log("💾 เซฟประวัติการดูจบแล้ว");
+    }
+
+    const overlay = document.getElementById('video-player-overlay');
+    const container = document.getElementById('player-container');
+    const seasonContainer = document.getElementById('season-buttons');
+    const epContainer = document.getElementById('episode-list');
+
+    overlay.classList.remove('active');
+    overlay.style.display = 'none';
+
+    container.innerHTML = ''; 
+    if (seasonContainer) seasonContainer.innerHTML = ''; 
+    if (epContainer) epContainer.innerHTML = ''; 
+}
+
+// 2. ฟังก์ชันตรวจสอบสิทธิ์ (VIP Check) ที่เรียกใช้ playTrailer อีกที
+// ฟังก์ชันหลักที่ทำงานเมื่อคลิกที่การ์ดหนัง
+async function watchMovie(contentId, title) {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    const userId = userData ? userData.user_id : null;
+
+    if (!userId) {
+        alert("กรุณาเข้าสู่ระบบก่อนรับชมครับ");
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/check-access/${contentId}?userId=${userId}`);
+        const data = await response.json();
+
+        if (data.canAccess) {
+            // 1. ล้างข้อมูลเก่าก่อนเปิดตัวเล่นใหม่
+            document.getElementById('player-container').innerHTML = ''; 
+            document.getElementById('season-buttons').innerHTML = '';
+            document.getElementById('episode-list').innerHTML = '';
+
+            const overlay = document.getElementById('video-player-overlay');
+            overlay.style.display = 'flex';
+            document.getElementById('playing-title').innerText = title;
+            
+            // 2. โหลด Season ใหม่ของเรื่องนี้เท่านั้น
+            loadSeasons(contentId);
+        } else {
+            window.location.href = data.redirectTo || 'packages.html';
+        }
+    } catch (error) {
+        console.error("Access Check Error:", error);
+    }
+}
+
+// ==========================================
+// 1. ฟังก์ชันโหลด Episode (ต้องเพิ่มส่วนนี้เข้าไป!)
+// ==========================================
+async function loadEpisodes(contentId, seasonId) {
+    const epContainer = document.getElementById('episode-list');
+    if (!epContainer) return;
+
+    try {
+        console.log(`🚀 กำลังดึงตอนของ Content: ${contentId}, Season: ${seasonId}`);
+        const response = await fetch(`/api/episodes/${contentId}`);
+        
+        // เช็คว่า Response เป็น JSON จริงไหม
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new TypeError("รูปแบบข้อมูลจาก Server ไม่ถูกต้อง (ไม่ใช่ JSON)");
+        }
+
+        const data = await response.json();
+        epContainer.innerHTML = ''; 
+
+        // ✅ แก้จุดนี้: เช็คก่อนว่ามี data.episodes ไหม ถ้าไม่มีให้ใช้ []
+        const episodes = data.episodes || []; 
+        
+        // กรองข้อมูล
+        const filtered = episodes.filter(ep => Number(ep.season_id) === Number(seasonId));
+
+        if (filtered.length === 0) {
+            epContainer.innerHTML = '<p style="color: #888; text-align: center; width: 100%; padding: 20px;">ยังไม่มีตอนสำหรับซีซันนี้</p>';
+            return;
+        }
+
+        filtered.forEach((ep, idx) => {
+        const div = document.createElement('div');
+        div.className = 'ep-item';
+        div.innerHTML = `<span><i class="fa-solid fa-play"></i> ตอนที่ ${ep.episode_number}: ${ep.title}</span>`;
+
+        div.onclick = () => {
+            document.querySelectorAll('#episode-list .ep-item').forEach(el => el.classList.remove('active'));
+            div.classList.add('active');
+
+            // 📍 จุดที่ 1: ฝากค่า ID ไว้ตอนที่ User คลิกเลือกตอนด้วยตัวเอง
+            window.currentContentId = contentId;
+            window.currentEpisodeId = ep.episode_id;
+
+            const videoLink = ep.video_url || ep.trailer_key; 
+    playTrailer(videoLink, ep.title, contentId, ep.episode_id)
+        };
+
+            // กดตัวแรกอัตโนมัติ
+            if (idx === 0) {
+                div.classList.add('active');
+
+                // 📍 จุดที่ 2: ฝากค่า ID ไว้ตั้งแต่ตอนเปิดเรื่อง (เพราะระบบเลือกตอนแรกให้ทันที)
+                window.currentContentId = contentId;
+                window.currentEpisodeId = ep.episode_id;
+
+                setTimeout(() => {
+                    playTrailer(ep.trailer_key || ep.video_url, ep.title, contentId, ep.episode_id);
+                }, 100);
+            }
+
+            epContainer.appendChild(div);
+        });
+    } catch (e) {
+        console.error("❌ Error loadEpisodes:", e);
+        epContainer.innerHTML = `<p style="color: red; text-align: center; width: 100%;">เกิดข้อผิดพลาด: ${e.message}</p>`;
+    }
+}
+
+// ==========================================
+// 2. ฟังก์ชันโหลด Season (สร้างปุ่ม S1, S2, S3)
+// ==========================================
+async function loadSeasons(contentId) {
+    try {
+        const response = await fetch(`/api/seasons/${contentId}`);
+        const data = await response.json();
+        
+        const seasonContainer = document.getElementById('season-buttons');
+        if (!seasonContainer) return;
+        seasonContainer.innerHTML = ''; 
+
+        if (data.seasons && data.seasons.length > 0) {
+            data.seasons.forEach((season, index) => {
+                const btn = document.createElement('button');
+                btn.innerText = `Season ${season.season_number}`;
+                btn.className = `btn-season ${index === 0 ? 'active' : ''}`;
+                
+                btn.onclick = async () => {
+                    document.querySelectorAll('.btn-season').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    await loadEpisodes(contentId, season.season_id); 
+                };
+                seasonContainer.appendChild(btn);
+            });
+
+            // โหลดตอนของ Season แรกอัตโนมัติ
+            await loadEpisodes(contentId, data.seasons[0].season_id);
+        }
+    } catch (e) {
+        console.error("❌ Error loadSeasons:", e);
+    }
+}
+
+    // 3. ฟังก์ชันดึงข้อมูลเหรียญและระดับสมาชิก (พร้อมปัดเศษตัวเลข)
+    async function fetchUserCoinAndLevel() {
+    const userData = localStorage.getItem('user');
+    if (!userData) return;
+
+    const user = JSON.parse(userData);
+    try {
+        // 🎯 แก้ Path ให้ตรงกับ Backend (ใช้ /api/user-status/)
+        const response = await fetch(`/api/user-status/${user.user_id}`);
+        const data = await response.json();
+
+        // ตรวจสอบว่ามีข้อมูลกลับมา (ไม่ใช่ 0 หรือ undefined)
+        if (data) {
+            // อัปเดตตัวเลขเหรียญ (ปัดเศษให้สวยงาม)
+            const roundedCoins = Math.round(data.coin_balance || 0);
+            const coinDisplay = document.getElementById('home-user-coins');
+            if (coinDisplay) coinDisplay.innerText = roundedCoins.toLocaleString();
+
+            // อัปเดตระดับสมาชิก
+            const levelDisplay = document.getElementById('home-user-level');
+            if (levelDisplay) {
+                // ถ้าใน DB เป็นตัวเลข ID ให้แปลงเป็นข้อความ (หรือส่งมาจาก Backend เลยก็ได้)
+                levelDisplay.innerText = data.member_level_id == 2 ? 'VIP' : 'เหรียญ';
+            }
+            
+            // อัปเดตข้อมูลใน LocalStorage เพื่อให้ส่วนอื่นๆ ของแอปใช้ข้อมูลล่าสุด
+            user.coin_balance = roundedCoins;
+            localStorage.setItem('user', JSON.stringify(user));
+        }
+    } catch (error) {
+        console.error("Error fetching user status:", error);
+    }
+}
+
+    // 3.5. ฟังก์ชันโหลดรายการรับชมต่อ
+    // 3.5. ฟังก์ชันโหลดรายการรับชมต่อ (ฉบับแก้กระตุก)
+// 3.5. ฟังก์ชันโหลดรายการรับชมต่อ (ฉบับแก้ 404 และ Infinite Loop)
+async function loadContinueWatching() {
+    const userData = localStorage.getItem('user');
+    if (!userData) return;
+
+    const user = JSON.parse(userData);
+    const container = document.getElementById('continue-container');
+    const section = document.getElementById('continue-watching-section');
+    if (!container || !section) return;
+
+    try {
+        const response = await fetch(`/api/continue-watching/${user.user_id}`);
+        const data = await response.json();
+
+        if (data.success && data.history && data.history.length > 0) {
+            section.style.display = 'block';
+            container.innerHTML = ''; 
+
+            const htmlContent = data.history.map(item => {
+                // ถ้าใน DB ไม่มีรูป ให้ใช้สีเทาแทนไปก่อน จะได้ไม่กระตุก
+                const defaultImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mN8+R8AAnkB9X90f5IAAAAASUVORK5CYII=";
+                const poster = item.poster_path ? item.poster_path : defaultImage;
+                const progress = item.progress_percent || 0;
+                const title = item.ep_title ? `${item.title} - ${item.ep_title}` : item.title;
+
+                return `
+                    <div class="movie-card" onclick="watchMovie(${item.content_id}, '${item.episode_id || ''}')" 
+                         style="position: relative; cursor: pointer; width: 160px; display: inline-block; margin: 10px; background: #222; border-radius: 8px; overflow: hidden;">
+                        <img src="${poster}" alt="${title}" 
+                             onerror="this.onerror=null; this.src='${defaultImage}';" 
+                             style="width: 100%; height: 230px; object-fit: cover; display: block;">
+                        <div class="progress-bar" style="position: absolute; bottom: 40px; left: 0; right: 0; height: 4px; background: rgba(255,255,255,0.2);">
+                            <div style="height: 100%; background: #e50914; width: ${progress}%;"></div>
+                        </div>
+                        <div style="padding: 5px;">
+                            <p style="color: white; margin: 0; font-size: 13px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${title}</p>
+                            <p style="color: #888; font-size: 11px; text-align: center; margin: 0;">${progress}%</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = htmlContent;
+        } else {
+            section.style.display = 'none';
+        }
+    } catch (error) {
+        console.error("Error loading history:", error);
+        section.style.display = 'none';
+    }
+}
+
+    // 4. รวมการโหลดข้อมูลเมื่อเปิดหน้าเว็บไว้ที่ Event เดียว
+    // 4. ส่วนแสดงผล Login และ Logout
+window.addEventListener('load', () => {
+    // 1. โหลดข้อมูลพื้นฐาน
+    showMovies(); 
+    fetchUserCoinAndLevel();
+    loadContinueWatching(); // เพิ่มโหลด continue watching
+
+    // 2. ตรวจสอบโครงสร้าง HTML ที่จำเป็น (ดัก Error)
+    if (!document.getElementById('episode-list')) {
+        console.error('❌ วิกฤต: หา div id="episode-list" ไม่เจอในหน้า HTML! ระบบเล่นวิดีโออาจมีปัญหา');
+    }
+
+    // 3. จัดการส่วนแสดงผลผู้ใช้ (Login/Logout)
+    const authSection = document.getElementById('auth-section');
+    const userData = localStorage.getItem('user');
+
+    if (userData && authSection) {
+        const user = JSON.parse(userData);
+        authSection.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 15px; position: relative;">
+                <span style="color: white; font-size: 0.9rem; font-weight: 500;">${user.firstname}</span>
+                <div style="position: relative;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" 
+                         style="width: 32px; height: 32px; border-radius: 4px; cursor: pointer;" 
+                         onclick="toggleLogout(event)">
+                    
+                    <div id="logout-menu" style="display:none; position:absolute; right:0; top:45px; background:#141414; padding:12px; border:1px solid #333; min-width: 120px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 9999; border-radius: 4px;">
+                        <a href="javascript:void(0)" onclick="logout()" style="color:white; text-decoration:none; font-size:14px; display: block; width: 100%;">ออกจากระบบ</a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+});
+
+// 5. ฟังก์ชัน Logout (ตรวจสอบว่าอยู่นอก Event Listener อื่นๆ)
+function logout() {
+    if(confirm("คุณต้องการออกจากระบบใช่หรือไม่?")) {
+        localStorage.removeItem('user');
+        window.location.reload(); // รีเฟรชหน้าเพื่อกลับไปสถานะไม่ Login
+    }
+}
+
+function toggleLogout(event) {
+    event.stopPropagation();
+    const menu = document.getElementById('logout-menu');
+    if (menu) {
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+
+</script>
+<script>
+function toggleSearch() {
+    const overlay = document.getElementById('search-overlay');
+    // ตรวจสอบสถานะ display
+    if (overlay.style.display === 'none' || overlay.style.display === '') {
+        overlay.style.display = 'block';
+        document.getElementById('search-input').focus();
+        console.log("เปิดหน้าค้นหา");
+    } else {
+        overlay.style.display = 'none';
+        console.log("ปิดหน้าค้นหา");
+    }
+}
+
+async function doSearch() {
+    const query = document.getElementById('search-input').value.trim();
+    const resultsContainer = document.getElementById('search-results');
+    
+    // 1. ล้างผลลัพธ์เก่าออกก่อนทุกครั้ง เพื่อไม่ให้มัน Loop ซ้ำ
+    resultsContainer.innerHTML = '';
+
+    if (query.length === 0) return;
+
+    try {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const movies = await response.json();
+
+        if (movies.length === 0) {
+            resultsContainer.innerHTML = '<p style="color: gray; padding: 20px;">ไม่พบข้อมูล</p>';
+            return;
+        }
+
+        // 2. ตรวจสอบชื่อคอลัมน์ (เช่น content_id, title, poster_url) ให้ตรงกับตาราง content
+       // แก้ไขในส่วนการแสดงผลผลลัพธ์การค้นหา
+        resultsContainer.innerHTML = movies.map(movie => {
+            // ลบเครื่องหมาย ' ออกจากชื่อหนังเพื่อไม่ให้ JavaScript Error
+            const safeTitle = movie.title ? movie.title.replace(/'/g, "\\'") : "หนังใหม่";
+            
+            return `
+                <div class="movie-card" onclick="watchMovie(${movie.content_id}, '${safeTitle}')">
+                    <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                    <p>${movie.title}</p>
+                </div>
+            `;
+        }).join('');
+
+    } catch (err) {
+        console.error("Fetch Error:", err);
+    }
+}
+</script>
+</body>
+</html>

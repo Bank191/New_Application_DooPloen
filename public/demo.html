@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DooPloen Loading Animation - Demo</title>
+  <link rel="stylesheet" href="/css/loading.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      color: #1a1a2e;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-preview {
+      color: #e63946;
+    }
+
+    .gold {
+      color: #d4af37;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .demo-section {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f9f9f9;
+      border-left: 4px solid #e63946;
+      border-radius: 8px;
+    }
+
+    .demo-section h3 {
+      color: #1a1a2e;
+      margin-bottom: 15px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #e63946 0%, #d4af37 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #1a1a2e;
+      border: 2px solid #e63946;
+    }
+
+    .btn-secondary:hover {
+      background: #e63946;
+      color: white;
+    }
+
+    .code-block {
+      background: #1a1a2e;
+      color: #d4af37;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .code-block code {
+      color: #ffeb3b;
+    }
+
+    .info-box {
+      background: #e8f4f8;
+      border: 1px solid #b3d9e8;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+      color: #0c5460;
+      font-size: 14px;
+    }
+
+    .info-box strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .file-list {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .file-list h4 {
+      color: #1a1a2e;
+      margin-bottom: 10px;
+    }
+
+    .file-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .file-list li {
+      padding: 8px 0;
+      color: #666;
+      border-bottom: 1px solid #eee;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+
+    .file-list li:last-child {
+      border-bottom: none;
+    }
+
+    .file-list li::before {
+      content: "📄 ";
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span class="logo-preview">Doo</span><span class="gold">Ploen</span> Loading Animation
+    </h1>
+    <p>สร้างอนิเมชั่นโหลดที่สวยงามพร้อมเอฟเฟกต์และคำสั่งควบคุมที่ง่ายต่อการใช้งาน</p>
+
+    <!-- Installation Section -->
+    <div class="demo-section">
+      <h3>📦 วิธีการใช้งาน</h3>
+      <p>1. เพิ่ม CSS และ JS ลงในไฟล์ HTML ของคุณ</p>
+      <div class="code-block">
+&lt;link rel="stylesheet" href="/css/loading.css"&gt;
+&lt;script src="/js/loading.js"&gt;&lt;/script&gt;
+      </div>
+    </div>
+
+    <!-- Show Loader -->
+    <div class="demo-section">
+      <h3>▶ แสดง Loader</h3>
+      <p>เรียกคำสั่ง <code>DooPloen.show()</code> เพื่อแสดง loader</p>
+      <div class="code-block">
+<code>DooPloen.show();</code>  <span style="color: #888;">// แสดง Loader</span>
+<code>DooPloen.hide();</code>  <span style="color: #888;">// ซ่อน Loader</span>
+      </div>
+      <div class="button-group">
+        <button class="btn-primary" onclick="DooPloen.show()"> ▶ แสดง Loader</button>
+        <button class="btn-secondary" onclick="DooPloen.hide()">⏹ ซ่อน Loader</button>
+      </div>
+    </div>
+
+    <!-- Duration Demo -->
+    <div class="demo-section">
+      <h3>⏱ แสดง Loader ระยะเวลากำหนด</h3>
+      <p>แสดง Loader แล้วซ่อนอัตโนมัติหลังเวลาที่กำหนด (มิลลิวินาที)</p>
+      <div class="code-block">
+<code>DooPloen.duration(2000);</code>  <span style="color: #888;">// 2 วินาที</span>
+<code>DooPloen.duration(5000);</code>  <span style="color: #888;">// 5 วินาที</span>
+      </div>
+      <div class="button-group">
+        <button class="btn-primary" onclick="DooPloen.duration(2000)">⏱ 2 วินาที</button>
+        <button class="btn-primary" onclick="DooPloen.duration(3000)">⏱ 3 วินาที</button>
+        <button class="btn-primary" onclick="DooPloen.duration(5000)">⏱ 5 วินาที</button>
+      </div>
+    </div>
+
+    <!-- Fetch Demo -->
+    <div class="demo-section">
+      <h3>🌐 ใช้ Loader กับ API Calls</h3>
+      <p>แสดง Loader เมื่อดึงข้อมูลจาก API</p>
+      <div class="code-block">
+<code>DooPloen.fetch('/api/users')</code>
+  <span style="color: #888;">// ดึงข้อมูลและแสดง Loader</span>
+  .then(response =&gt; response.json())
+  .then(data =&gt; console.log(data));
+      </div>
+      <div class="button-group">
+        <button class="btn-primary" onclick="testFetch()">🌐 ทดสอบ Fetch</button>
+      </div>
+      <div id="fetchResult" style="margin-top: 10px; color: #666;"></div>
+    </div>
+
+    <!-- Async Example -->
+    <div class="demo-section">
+      <h3>⏳ ใช้ Loader กับ Promise/Async</h3>
+      <p>แสดง Loader ขณะรอ Promise ให้เสร็จสิ้น</p>
+      <div class="code-block">
+<code>const promise = new Promise(resolve =&gt; {</code>
+  setTimeout(() =&gt; resolve(), 3000);
+});
+<code>DooPloen.waitFor(promise);</code>
+      </div>
+      <div class="button-group">
+        <button class="btn-primary" onclick="testAsync()">⏳ ทดสอบ Async (3 วินาที)</button>
+      </div>
+    </div>
+
+    <!-- Files Generated -->
+    <div class="file-list">
+      <h4>📁 ไฟล์ที่สร้างขึ้น:</h4>
+      <ul>
+        <li>public/loading.html</li>
+        <li>public/css/loading.css</li>
+        <li>public/js/loading.js</li>
+        <li>public/demo.html (ไฟล์นี้)</li>
+      </ul>
+    </div>
+
+    <!-- Features -->
+    <div class="info-box">
+      <strong>✨ คุณสมบัติ:</strong>
+      ✅ สไตล์ที่สวยงามพร้อมอนิเมชั่น<br>
+      ✅ ควบคุมง่ายด้วยคำสั่งเรียบง่าย<br>
+      ✅ รองรับ Mobile Responsive<br>
+      ✅ ทำงานกับ Fetch API และ Promise<br>
+      ✅ Fade In/Out Effects
+    </div>
+  </div>
+
+  <script src="/js/loading.js"></script>
+
+  <script>
+    function testFetch() {
+      const resultDiv = document.getElementById('fetchResult');
+      DooPloen.show();
+      
+      setTimeout(() => {
+        DooPloen.hide();
+        resultDiv.textContent = '✅ ได้รับข้อมูลเรียบร้อยแล้ว';
+        resultDiv.style.color = '#28a745';
+      }, 2000);
+    }
+
+    function testAsync() {
+      const asyncTask = new Promise(resolve => {
+        setTimeout(() => {
+          resolve();
+        }, 3000);
+      });
+
+      DooPloen.waitFor(asyncTask).then(() => {
+        alert('✅ ภารกิจเสร็จสิ้นแล้ว!');
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<head>
+    <link rel="stylesheet" href="/css/privileges-style.css">
+    <style>
+        /* แถม CSS ด่วน! ใส่ตรงนี้เผื่อไฟล์ข้างบนโหลดไม่ติด */
+        .profile-card { background: #E50914; color: white; padding: 20px; border-radius: 0 0 20px 20px; text-align: center; }
+        #user-avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid white; margin-bottom: 10px; }
+        .level-badge { padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
+        .silver { background: #C0C0C0; color: #333; }
+        .gold { background: #FFD700; color: #333; }
+        .progress-bar { background: rgba(255,255,255,0.3); height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { background: #FFD700; height: 100%; transition: width 0.5s; }
+    </style>
+</head>
+
+<div class="profile-card">
+    <div class="profile-card">
+    <a href="index.html" style="text-decoration: none; position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+        <i class="fas fa-arrow-left"></i> <span style="font-size: 1.2rem; font-weight: bold;">🏠</span> 
+    </a>
+    
+    </div>
+
+    <div class="user-info" style="display: flex; flex-direction: column; align-items: center;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" id="user-avatar">
+        <div class="user-detail">
+            <h2 id="user-name">กำลังโหลด...</h2>
+            <span class="level-badge" id="user-level-name">-</span> 
+        </div>
+
+        <div class="coin-total" style="margin-top: 15px;">
+            <p style="margin: 0; font-size: 0.8rem; opacity: 0.9;">จำนวนเหรียญสะสม</p>
+            <div class="coin-val" style="font-size: 1.3rem; font-weight: bold;">
+                <span id="total-coins">0</span> 🪙
+            </div>
+        </div>
+
+        <div style="width: 90%; margin-top: 20px; text-align: left; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;">
+            <p style="margin: 0 0 8px 0; font-size: 0.75rem; font-weight: bold; color: #fff;">ความคืบหน้าการเลื่อนระดับ:</p>
+            
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 2px;">
+                <span>ยอดใช้จ่ายสะสม</span>
+                <span id="spend-text-ui">0 / 0</span>
+            </div>
+            <div class="progress-bar" style="height: 8px; margin-bottom: 10px;">
+                <div id="spend-fill" class="progress-fill" style="width: 0%; background: #FFD700;"></div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 2px;">
+                <span>ระยะเวลาสมาชิก</span>
+                <span id="time-text-ui">0 / 0 เดือน</span>
+            </div>
+            <div class="progress-bar" style="height: 6px; opacity: 0.8;">
+                <div id="time-fill" class="progress-fill" style="width: 0%; background: #00c6ff;"></div>
+            </div>
+
+            <p id="status-desc" style="margin: 8px 0 0 0; font-size: 0.7rem; color: #ffcc00; text-align: center; font-style: italic;"></p>
+        </div>
+        </div>
+</div>
+
+<hr style="border: 0; border-top: 1px solid #222; margin: 30px 0;">
+
+<h3 style="text-align: center; font-size: 1rem; color: #E50914;">สำรวจสิทธิพิเศษระดับต่างๆ</h3>
+<div class="level-selector-container">
+    <button onclick="changeLevelView(-1)" class="nav-btn">❮</button>
+    <div id="viewing-level-display" class="level-badge-display">Silver</div>
+    <button onclick="changeLevelView(1)" class="nav-btn">❯</button>
+</div>
+
+<div class="benefit-detail-box">
+    <p id="level-benefits-info">กำลังโหลดข้อมูลสิทธิประโยชน์...</p>
+</div>
+
+<div id="level-benefits-info" style="text-align: center; color: #ccc; font-size: 0.9rem; margin-bottom: 20px; padding: 0 20px;">
+    กำลังโหลดข้อมูลสิทธิประโยชน์...
+</div>
+
+<h3 class="section-title" style="padding: 0 20px;">ของรางวัลสำหรับระดับนี้</h3>
+<div class="privilege-grid" id="privilege-container">
+    </div>
+<div id="redeemModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000;">
+    <div style="background: #222; padding: 20px; border-radius: 10px; text-align: center; color: white; width: 80%; max-width: 400px; border: 1px solid #E50914;">
+        <h3>ยืนยันการแลกสิทธิ์</h3>
+        <p>คุณต้องการแลก <strong id="targetItemName" style="color: #E50914;">...</strong></p>
+        <p>ใช้เหรียญ: <strong id="targetItemCost">0</strong> 🪙</p>
+        <div style="margin-top: 20px; display: flex; justify-content: space-around;">
+            <button onclick="closeModal()" style="padding: 10px 20px; background: #555; color: white; border: none; border-radius: 5px; cursor: pointer;">ยกเลิก</button>
+            <button id="confirmBtn" style="padding: 10px 20px; background: #E50914; color: white; border: none; border-radius: 5px; cursor: pointer;">ยืนยันการแลก</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// 1. ข้อมูลสำหรับแสดงผลสิทธิประโยชน์คงเดิม
+const levelConfig = {
+    1: { name: 'Welcome', benefit: 'ระดับเริ่มต้น: สะสมแต้มปกติจากการชมภาพยนตร์', class: 'welcome' },
+    2: { name: 'Silver', benefit: 'ระดับ Silver: รับแต้มสะสม x1.2 และส่วนลดพาร์ทเนอร์ 5%', class: 'silver' },
+    3: { name: 'Gold', benefit: 'ระดับ Gold: รับแต้มสะสม x1.5 และรับชม Exclusive Content ฟรี 1 เรื่อง', class: 'gold' },
+    4: { name: 'Platinum', benefit: 'ระดับ Platinum: รับแต้มสะสม x2.0 และสิทธิเข้าชมรอบปฐมทัศน์', class: 'platinum' }
+};
+
+let currentViewLevel = 2; 
+let selectedPrivId = null; // เก็บ ID ที่กำลังจะแลก
+
+window.addEventListener('load', async () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+        // แก้ไขการแสดงชื่อให้เต็มยศ
+        document.getElementById('user-name').innerText = 
+            `${userData.firstname || 'สมาชิก'} ${userData.lastname || ''}`;
+        fetchUserRealStatus(userData.user_id);
+    }
+    updateLevelUI(); 
+});
+
+// ฟังก์ชันดึงข้อมูลเหรียญและเลเวลจริง
+async function fetchUserRealStatus(userId) {
+    // 1. กำหนดค่าเริ่มต้น (Default) ไว้ก่อนเลย เพื่อไม่ให้หน้าจอเป็น 0/0 ระหว่างรอโหลด
+    const levelConfig = {
+        1: { name: 'Welcome', class: 'welcome' },
+        2: { name: 'Silver', class: 'silver' },
+        3: { name: 'Gold', class: 'gold' },
+        4: { name: 'Platinum', class: 'platinum' }
+    };
+
+    let displayLevelId = 1;
+    let tSpend = 3449; // เป้าหมายไป Silver
+    let tDays = 180;   // เป้าหมายไป Silver
+    let nextL = "Silver";
+
+    const levelBadge = document.getElementById('user-level-name');
+
+    try {
+        const response = await fetch(`/api/user-status/${userId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            // --- ส่วนที่ 1: ข้อมูลพื้นฐาน ---
+            if(document.getElementById('total-coins')) {
+                document.getElementById('total-coins').innerText = Number(data.coin_balance || 0).toLocaleString();
+            }
+            if(document.getElementById('user-name')) {
+                document.getElementById('user-name').innerText = data.firstname ? `${data.firstname} ${data.lastname}` : 'ผู้ใช้งาน';
+            }
+
+            // --- ส่วนที่ 2: คำนวณยอดจ่ายและจำนวนวัน ---
+            const currentSpend = Number(data.total_spending) || 0;
+            const signupDate = data.created_at ? new Date(data.created_at) : new Date();
+            const now = new Date();
+
+            const diffTime = Math.abs(now - signupDate);
+            const daysActive = Math.floor(diffTime / (1000 * 60 * 60 * 24)) || 0; 
+
+            // Logic ตรวจสอบระดับ
+            if (currentSpend >= 6399 && daysActive >= 720) {
+                displayLevelId = 4;
+                tSpend = 6399; tDays = 720; nextL = "ระดับสูงสุด";
+            } else if (currentSpend >= 5099 && daysActive >= 360) {
+                displayLevelId = 3;
+                tSpend = 6399; tDays = 720; nextL = "Platinum";
+            } else if (currentSpend >= 3449 && daysActive >= 180) {
+                displayLevelId = 2;
+                tSpend = 5099; tDays = 360; nextL = "Gold";
+            } else {
+                displayLevelId = 1;
+                tSpend = 3449; tDays = 180; nextL = "Silver";
+            }
+
+            // อัปเดต UI ตามระดับที่คำนวณได้จริง
+            if (levelBadge && levelConfig[displayLevelId]) {
+                levelBadge.innerText = levelConfig[displayLevelId].name;
+                levelBadge.className = `level-badge ${levelConfig[displayLevelId].class}`;
+            }
+
+            // คำนวณ % สำหรับหลอด
+            const spendPct = Math.min((currentSpend / tSpend) * 100, 100);
+            const timePct = Math.min((daysActive / tDays) * 100, 100);
+
+            // --- ส่วนที่ 3: อัปเดต UI ตัวเลขจริง ---
+            
+            // ✅ แก้ไข: อัปเดตตัวเลขปัจจุบัน / เป้าหมาย (เช็ค ID ให้ตรงกับ HTML)
+            if(document.getElementById('current-spend')) document.getElementById('current-spend').innerText = currentSpend.toLocaleString();
+            if(document.getElementById('target-spend')) document.getElementById('target-spend').innerText = tSpend.toLocaleString();
+            if(document.getElementById('current-days')) document.getElementById('current-days').innerText = daysActive.toLocaleString();
+            if(document.getElementById('target-days')) document.getElementById('target-days').innerText = tDays.toLocaleString();
+
+            // ✅ กรณีที่คุณใช้ ID แบบรวม (spend-text-ui)
+            if(document.getElementById('spend-text-ui')) {
+                document.getElementById('spend-text-ui').innerText = `${currentSpend.toLocaleString()} / ${tSpend.toLocaleString()}`;
+            }
+            if(document.getElementById('time-text-ui')) {
+                document.getElementById('time-text-ui').innerText = `${daysActive.toLocaleString()} / ${tDays.toLocaleString()} วัน`;
+            }
+
+            // อัปเดตความยาวหลอด
+            const spendFill = document.getElementById('spend-progress') || document.getElementById('spend-fill');
+            const timeFill = document.getElementById('days-progress') || document.getElementById('time-fill');
+            
+            if(spendFill) spendFill.style.width = spendPct + '%';
+            if(timeFill) timeFill.style.width = timePct + '%';
+            
+            // อัปเดตคำอธิบายด้านล่าง
+            const statusDesc = document.getElementById('status-desc') || document.getElementById('progress-text');
+            if(statusDesc) {
+                const remainDays = Math.max(tDays - daysActive, 0);
+                const remainMoney = Math.max(tSpend - currentSpend, 0);
+                
+                if(displayLevelId >= 4) {
+                    statusDesc.innerText = "คุณอยู่ในระดับสูงสุดเรียบร้อยแล้ว";
+                } else {
+                    let desc = `อีก ฿${remainMoney.toLocaleString()}`;
+                    if (remainDays > 0) desc += ` และอีก ${remainDays} วัน`;
+                    desc += ` เพื่อเป็น ${nextL}`;
+                    statusDesc.innerText = desc;
+                }
+            }
+
+            // บังคับให้หน้าเว็บแสดงสิทธิประโยชน์ตามระดับที่คำนวณได้จริง
+            if (typeof currentViewLevel !== 'undefined') {
+                currentViewLevel = displayLevelId; 
+                if (typeof updateLevelUI === "function") updateLevelUI(); 
+            }
+        }
+    } catch (err) { 
+        console.error("Error fetching user status:", err); 
+    }
+}
+
+// ฟังก์ชันเปลี่ยนมุมมองเลเวล (กดลูกศร)
+function changeLevelView(direction) {
+    currentViewLevel += direction;
+    if (currentViewLevel < 1) currentViewLevel = 4;
+    if (currentViewLevel > 4) currentViewLevel = 1;
+    updateLevelUI();
+}
+
+// อัปเดต UI และดึงของรางวัลตามเลเวล
+async function updateLevelUI() {
+    const config = levelConfig[currentViewLevel];
+    const display = document.getElementById('viewing-level-display');
+    
+    display.innerText = config.name;
+    display.className = `level-badge ${config.class}`;
+    document.getElementById('level-benefits-info').innerText = config.benefit;
+
+    fetchPrivilegesByLevel(currentViewLevel);
+}
+
+// ดึงของรางวัลและสร้างปุ่ม "แลกสิทธิเลย"
+// ฟังก์ชัน Render ของรางวัลแยกตามหมวดหมู่
+async function fetchPrivilegesByLevel(levelId) {
+    const container = document.getElementById('privilege-container');
+    const userDataStore = JSON.parse(localStorage.getItem('user'));
+    
+    // ดึง userId จาก localStorage มาเตรียมไว้
+    const userId = userDataStore ? userDataStore.user_id : null;
+
+    if (!userId) {
+        console.error("User ID not found");
+        return;
+    }
+
+    try {
+        // 1. ดึงระดับจริงของผู้ใช้จาก Badge
+        const levelBadge = document.getElementById('user-level-name');
+        const levelBadgeText = levelBadge ? levelBadge.innerText.trim() : 'Welcome';
+        const levelMap = { 'Welcome': 1, 'Silver': 2, 'Gold': 3, 'Platinum': 4 };
+        const realUserLevel = levelMap[levelBadgeText] || 1;
+
+        // 2. ดึงข้อมูลสิทธิพิเศษ (แก้ไขจุดนี้: เพิ่ม /${userId} ต่อท้าย URL)
+        const response = await fetch(`/api/user/privileges-by-level/${levelId}/${userId}`);
+        
+        // ตรวจสอบว่า response โอเคไหมก่อนแปลงเป็น JSON
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const data = await response.json();
+
+        if (data.success && data.privileges.length > 0) {
+            const grouped = data.privileges.reduce((acc, item) => {
+                const category = item.partner_name || 'สิทธิพิเศษอื่นๆ';
+                if (!acc[category]) acc[category] = [];
+                acc[category].push(item);
+                return acc;
+            }, {});
+
+            container.innerHTML = Object.keys(grouped).map(category => `
+                <div class="privilege-row">
+                    <h3 class="row-title">${category}</h3>
+                    <div class="row-items-scroller">
+                        ${grouped[category].map(item => {
+                            // --- Logic ล็อกตามระดับ ---
+                            const isLocked = realUserLevel < currentViewLevel; 
+                            
+                            // --- Logic เช็คแลกครบ (ดึงค่า redeemed_count ที่ Backend ส่งมาให้) ---
+                            const isUsedUp = item.redeemed_count >= (item.limit_per_user || 1); 
+
+                            let btnText = 'แลกสิทธิ์';
+                            if (isLocked) btnText = 'ระดับไม่ถึง';
+                            else if (isUsedUp) btnText = 'แลกครบแล้ว';
+
+                            return `
+                                <div class="priv-card-v2 ${isLocked || isUsedUp ? 'locked' : ''}">
+                                    ${isLocked ? '<div class="lock-overlay">🔒</div>' : ''}
+                                    ${isUsedUp ? '<div class="used-badge">คุณได้รับสิทธิ์นี้แล้ว</div>' : ''}
+                                    
+                                    <div class="card-img-container">
+                                        <img src="${item.image_url || 'default.png'}" 
+                                             style="${(isLocked || isUsedUp) ? 'filter: grayscale(1); opacity: 0.6;' : ''}">
+                                        <span class="limit-tag">${item.remained_qty} สิทธิ์สุดท้าย</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4>${item.title}</h4>
+                                        <p class="coin-price">🪙 ${Number(item.coin_cost).toLocaleString()} เหรียญ</p>
+                                        <button class="btn-redeem-v2 ${isLocked || isUsedUp ? 'disabled' : ''}" 
+                                            ${(isLocked || isUsedUp) ? 'disabled' : ''}
+                                            onclick="${(!isLocked && !isUsedUp) ? `openRedeemModal(${item.privilege_id}, '${item.title}', ${item.coin_cost})` : ''}">
+                                            ${btnText}
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = `<p style="color:#888; text-align:center; width:100%; padding:20px;">ไม่พบสิทธิประโยชน์สำหรับระดับนี้</p>`;
+        }
+    } catch (err) { 
+        console.error("Fetch Privileges Error:", err);
+        container.innerHTML = `<p style="color:red; text-align:center;">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>`;
+    }
+}
+
+// --- ส่วนที่เพิ่มใหม่: ระบบ Modal ยืนยันการแลก ---
+
+// ฟังก์ชันเปิด Modal และเตรียมข้อมูล
+function openRedeemModal(id, title, cost) {
+    const userCoins = parseInt(document.getElementById('total-coins').innerText.replace(/,/g, ''));
+    
+    if (userCoins < cost) {
+        alert("เหรียญของคุณไม่พอสำหรับแลกรายการนี้");
+        return;
+    }
+
+    document.getElementById('targetItemName').innerText = title;
+    document.getElementById('targetItemCost').innerText = cost;
+    document.getElementById('redeemModal').style.display = 'flex';
+    
+    // ตั้งค่าให้ปุ่มยืนยันส่งข้อมูลไปที่ Backend
+    document.getElementById('confirmBtn').onclick = () => processRedeem(id);
+}
+
+function closeModal() {
+    document.getElementById('redeemModal').style.display = 'none';
+}
+
+// 🚩 วางต่อท้ายตรงนี้
+async function processRedeem(privilegeId) {
+    const userDataStore = JSON.parse(localStorage.getItem('user'));
+    const userId = userDataStore.user_id;
+
+    try {
+        const response = await fetch('/api/redeem-privilege', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, privilegeId })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert("แลกสิทธิ์สำเร็จ!");
+            closeModal();
+            
+            // 🚩 สำคัญ: ต้องโหลดข้อมูลใหม่เพื่อให้ Card กลายเป็นสีเทาและแสดงสถานะแลกแล้ว
+            fetchUserRealStatus(userId); 
+            fetchPrivilegesByLevel(currentViewLevel); 
+        } else {
+            alert(result.message);
+        }
+    } catch (err) {
+        console.error("Redeem Error:", err);
+        alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+    }
+}
+
+</script>

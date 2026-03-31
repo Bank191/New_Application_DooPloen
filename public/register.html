@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>DooPloen - สมัครสมาชิก</title>
+    <style>
+        body { background: #141414; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .reg-box { background: #222; padding: 30px; border-radius: 10px; width: 350px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #e50914; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #333; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #e50914; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background: #b20710; }
+        
+        /* สไตล์สำหรับ Checklist */
+        .criteria-list { font-size: 13px; margin-top: 5px; padding-left: 5px; }
+        .criteria { color: #ff4d4d; transition: 0.3s; margin: 4px 0; display: block; }
+        .criteria.valid { color: #2ecc71; }
+        
+        .link { text-align: center; margin-top: 15px; font-size: 14px; }
+        .link a { color: #aaa; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="reg-box">
+    <h2>สมัครสมาชิก</h2>
+    <input type="text" id="fname" placeholder="ชื่อจริง">
+    <input type="text" id="lname" placeholder="นามสกุล">
+    <input type="email" id="email" placeholder="อีเมล">
+    
+    <input type="password" id="pass" placeholder="รหัสผ่าน" oninput="validatePassword()">
+    
+    <div class="criteria-list">
+        <span id="len" class="criteria">✖ ยาว 8 ตัวขึ้นไป</span>
+        <span id="upper" class="criteria">✖ ตัวพิมพ์ใหญ่ (A-Z)</span>
+        <span id="lower" class="criteria">✖ ตัวพิมพ์เล็ก (a-z)</span>
+        <span id="num" class="criteria">✖ ตัวเลข (0-9)</span>
+        <span id="spec" class="criteria">✖ อักขระพิเศษ (@$!%*?&)</span>
+    </div>
+
+    <button onclick="handleRegister()">ลงทะเบียน</button>
+    <div class="link">มีบัญชีอยู่แล้ว? <a href="login.html">เข้าสู่ระบบ</a></div>
+    <p id="msg" style="text-align: center; font-size: 14px;"></p>
+</div>
+
+<script>
+// ✨ ฟังก์ชันเช็คสีแบบ Real-time
+function validatePassword() {
+    const password = document.getElementById('pass').value;
+    
+    const checks = {
+        len: password.length >= 8,
+        upper: /[A-Z]/.test(password),
+        lower: /[a-z]/.test(password),
+        num: /[0-9]/.test(password),
+        spec: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+    };
+
+    let allValid = true;
+
+    for (const [id, isValid] of Object.entries(checks)) {
+        const el = document.getElementById(id);
+        if (el) {
+            if (isValid) {
+                el.classList.add('valid');
+                el.innerHTML = el.innerHTML.replace('✖', '✔'); // เปลี่ยนกากบาทเป็นเครื่องหมายถูก
+            } else {
+                el.classList.remove('valid');
+                el.innerHTML = el.innerHTML.replace('✔', '✖'); // เปลี่ยนกลับถ้าลบออก
+                allValid = false;
+            }
+        }
+    }
+    return allValid;
+}
+
+async function handleRegister() {
+    const firstname = document.getElementById('fname').value;
+    const lastname = document.getElementById('lname').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('pass').value;
+    const msg = document.getElementById('msg');
+
+    // เรียกใช้ฟังก์ชันเช็คเงื่อนไขก่อนส่ง
+    if (!validatePassword()) {
+        msg.style.color = "orange";
+        msg.innerText = "กรุณากรอกรหัสผ่านให้ครบตามเงื่อนไขสีเขียว";
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ firstname, lastname, email, password })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            alert("สมัครสมาชิกสำเร็จ!");
+            window.location.href = 'login.html';
+        } else {
+            msg.style.color = "red";
+            msg.innerText = result.message;
+        }
+    } catch (error) {
+        msg.style.color = "red";
+        msg.innerText = "Error: " + error.message;
+    }
+}
+</script>
+
+</body>
+</html>

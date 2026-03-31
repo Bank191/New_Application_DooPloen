@@ -1,0 +1,35 @@
+<div class="profile-container">
+    <div class="user-info">
+        <img src="/images/default-avatar.png" id="userAvatar" alt="Avatar">
+        <h2 id="userName">Loading...</h2>
+        <p id="userEmail">Loading...</p>
+    </div>
+
+    <div class="membership-card">
+        <h3>ระดับสมาชิก: <span id="memberLevel">...</span></h3>
+        <p>ยอดสะสม: <span id="totalSpending">0</span> บาท</p>
+        <div class="coin-balance">
+            🪙 เหรียญคงเหลือ: <span id="coinBalance">0</span>
+        </div>
+    </div>
+
+    <div class="profile-menu">
+        <button onclick="location.href='/history.html'">📜 ประวัติการชำระเงิน</button>
+        <button onclick="location.href='/missions.html'">🎯 ภารกิจของฉัน</button>
+        <button onclick="logout()" class="btn-logout">ออกจากระบบ</button>
+    </div>
+</div>
+
+<div class="level-up-progress">
+    <div class="level-info">
+        <span>ระดับปัจจุบัน: <strong id="current-level-name">Silver</strong></span>
+        <span>เป้าหมายถัดไป: <strong id="next-level-name">Gold</strong></span>
+    </div>
+    
+    <div class="progress-container-main">
+        <div id="level-progress-fill" class="progress-fill-main" style="width: 0%;"></div>
+    </div>
+    
+    <p class="progress-text">อีก <span id="remaining-amount">0</span> บาท เพื่อเป็นระดับ Gold</p>
+</div>
+

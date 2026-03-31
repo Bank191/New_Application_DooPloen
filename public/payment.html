@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ชำระเงิน - DooPloen</title>
+    <style>
+        body { background: #000; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
+        .payment-card { background: #1a1a1a; max-width: 400px; margin: auto; padding: 30px; border-radius: 15px; border: 1px solid #333; }
+        .qr-placeholder { background: white; width: 250px; height: 250px; margin: 20px auto; display: flex; align-items: center; justify-content: center; }
+        .btn-confirm { background: #e50914; color: white; border: none; width: 100%; padding: 15px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn-confirm:disabled { background: #555; }
+    </style>
+</head>
+<body>
+    <div class="payment-card">
+        <h2 id="p-name">กำลังโหลด...</h2>
+        <h1 id="p-amount">0฿</h1>
+        
+        <div class="qr-placeholder">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=PROMPTPAY_DATA" alt="QR Code" width="250">
+        </div>
+        <p>สแกน QR เพื่อโอนเงิน แล้วกดปุ่มยืนยัน</p>
+
+        <button id="confirm-btn" class="btn-confirm" onclick="completePayment()">ยืนยันการชำระเงิน</button>
+        <button type="button" 
+        onclick="window.location.href='packages.html'" 
+        style="background: transparent; color: #aaa; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline;">
+    ยังไม่พร้อมชำระเงิน? ย้อนกลับ
+</button>
+    </div>
+
+    <script>
+        // ดึงค่าจาก URL
+        const params = new URLSearchParams(window.location.search);
+        const pkgId = params.get('packageId');
+        const pkgName = params.get('name');
+        const pkgAmount = params.get('amount');
+        const pkgBonus = params.get('bonus');
+
+        // แสดงผลหน้าจอ
+        document.getElementById('p-name').innerText = "แพ็กเกจ " + pkgName;
+        document.getElementById('p-amount').innerText = pkgAmount + "฿";
+
+        async function completePayment() {
+            const user = JSON.parse(localStorage.getItem("user"));
+            const btn = document.getElementById('confirm-btn');
+            
+            btn.disabled = true;
+            btn.innerText = "กำลังประมวลผล...";
+
+            try {
+                // ยกส่วน fetch เดิมของคุณมาไว้ที่นี่
+                const response = await fetch('/api/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.user_id,
+                        packageId: pkgId,
+                        type: 'CASH',
+                        amount: parseInt(pkgAmount),
+                        bonusCoins: parseInt(pkgBonus)
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert("สมัครสมาชิกสำเร็จ!");
+                    window.location.href = "home.html";
+                } else {
+                    alert("เกิดข้อผิดพลาด: " + result.message);
+                    btn.disabled = false;
+                    btn.innerText = "ยืนยันการชำระเงิน";
+                }
+            } catch (err) {
+                alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+                btn.disabled = false;
+                btn.innerText = "ยืนยันการชำระเงิน";
+            }
+        }
+    </script>
+</body>
+</html>
