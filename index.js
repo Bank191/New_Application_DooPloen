@@ -1276,6 +1276,15 @@ async function syncSuperData() {
                     // แต่ถ้ายังไม่เคยมีคอลัมน์นี้ ข้อมูลก็จะว่างไว้ตามปกติ
                 }
                 console.log(`✅ ซิงค์โครงสร้างสำเร็จ: ${title}`);
+                if (item.genre_ids && item.genre_ids.length > 0) {
+                  for (const genreId of item.genre_ids) {
+                      await db.promise().query(
+                          "INSERT IGNORE INTO content_genre (content_id, genre_id) VALUES (?, ?)",
+                          [item.id, genreId]
+                      );
+                  }
+                  console.log(`🔗 จับคู่หมวดหมู่ให้หนัง: ${title} เรียบร้อย!`);
+              }
             }
         }
         console.log("🌟 ซิงค์ข้อมูล TMDB ครบถ้วน (ข้ามขั้นตอน YouTube เพื่อความเร็ว)!");
